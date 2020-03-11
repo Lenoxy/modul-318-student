@@ -46,15 +46,20 @@ namespace Fahrplan_Applikation_GUI {
                     fahrplanTimePicker.Text = DateTime.Now.ToString("HH:mm");
                 }
 
-                Console.WriteLine(fahrplanDatePicker.SelectedDate.GetValueOrDefault().ToString("dd/MM/yyyy"));
-                fahrplanDatePicker.Text = validateDate(fahrplanDatePicker.SelectedDate.GetValueOrDefault().ToString("dd/MM/yyyy"));
+                DateTime selectedDate = new DateTime();
+                if (fahrplanDatePicker.SelectedDate != null) {
+                    selectedDate = (DateTime)fahrplanDatePicker.SelectedDate;
+                }
+
+                selectedDate = validateDate(selectedDate);
+                fahrplanDatePicker.Text = selectedDate.ToString("dd/MM/yyyy");
                 fahrplanTimePicker.Text = validateTime(fahrplanTimePicker.Text);
 
 
                 Connections connections = transport.GetConnections(
                     vonFahrplanComboBox.Text,
                     bisFahrplanComboBox.Text,
-                    fahrplanDatePicker.Text,
+                    selectedDate.ToString("MM/dd/yyyy"),
                     fahrplanTimePicker.Text
                     );
                 fahrplanListBox.ItemsSource = parseFahrplanRows(connections);
@@ -71,14 +76,19 @@ namespace Fahrplan_Applikation_GUI {
             return time;
         }
 
-        private string validateDate(string date) {
-            Console.WriteLine(date);
-            if (Regex.IsMatch(date, "^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
-                return DateTime.Parse(date).ToString("MM/dd/yyyy");
+        private DateTime validateDate(DateTime? date) {
+            if(date.HasValue) {
+                DateTime d = (DateTime)date;
+                if (Regex.IsMatch(d.ToString("dd/MM/yyyy"), "^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
+                    return d;
+                } else {
+                    showError("Ungültiges Format des Datums.");
+                    return DateTime.Now;
+                }
             } else {
-                showError("Ungültiges Format des Datums.");
-                return DateTime.Now.ToString("MM/dd/yyyy");
+                return DateTime.Now;
             }
+
         }
 
         private List<string> parseFahrplanRows(Connections connections) {
