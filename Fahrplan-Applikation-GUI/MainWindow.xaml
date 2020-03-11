@@ -22,12 +22,10 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Grid.Row="0" Name="fahrplan" Content="Fahrplan" Click="onNavButtonClick"/>
             <Button Grid.Row="1" Name="abfahrtstafel" Content="Abfahrtstafel" Click="onNavButtonClick"/>
             <Button Grid.Row="2" Name="stationensuche" Content="Stationensuche" Click="onNavButtonClick"/>
-            <Button Grid.Row="3" Name="stationenBeiMir" Content="Stationen bei mir" Click="onNavButtonClick"/>
         </Grid>
 
         <Label Name="titleLabel" Grid.Column="1" Grid.Row="0"/>
@@ -41,6 +39,7 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="3*"/>
@@ -54,8 +53,11 @@
                     KeyDown="searchStationsAutoComplete" 
                     IsTextSearchEnabled="False"
                     />
+                <Button Grid.Column="1" Height="20" Margin="10" Click="onFahrplanSwitchClick">
+                    <Image Source="res/switch.png"/>
+                </Button>
                 <ComboBox 
-                    Grid.Column="1" 
+                    Grid.Column="2" 
                     Name="bisFahrplanComboBox" 
                     IsEditable="True" 
                     Margin="20" 
@@ -64,7 +66,7 @@
                     IsTextSearchEnabled="False" 
                     />
                 
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -74,7 +76,7 @@
                     <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True"/>
                 </Grid>
                 
-                <Button Grid.Column="3" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
+                <Button Grid.Column="4" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
             </Grid>
 
             <ListBox Grid.Row="1" Margin="10" Name="fahrplanListBox"/>
@@ -128,11 +130,6 @@
                 <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="25" Margin="20"/>
             </Grid>
             <ListBox Grid.Row="1" Name="stationensucheListBox" Margin="10"/>
-        </Grid>
-
-        <Grid Name="stationenBeiMirGrid" Grid.Column="1" Grid.Row="1">
-            <Label Content="stationen bei mir"/>
-
         </Grid>
     </Grid>
 </Window>

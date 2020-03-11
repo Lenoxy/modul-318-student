@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SwissTransport;
 namespace Fahrplan_Applikation_GUI {
     /// <summary>
@@ -28,7 +19,7 @@ namespace Fahrplan_Applikation_GUI {
             InitializeComponent();
             transport = new Transport();
 
-            List<Grid> menuEntries = new List<Grid>() { fahrplanGrid, abfahrtstafelGrid, stationensucheGrid, stationenBeiMirGrid };
+            List<Grid> menuEntries = new List<Grid>() { fahrplanGrid, abfahrtstafelGrid, stationensucheGrid };
             navigationEngine = new NavigationEngine(menuEntries, fahrplan, titleLabel);
 
             for (int i = 0; i < 24; i++) {
@@ -185,6 +176,12 @@ namespace Fahrplan_Applikation_GUI {
             List<string> stationList = getStationStr(target.Text);
             target.ItemsSource = stationList;
 
+        }
+
+        private void onFahrplanSwitchClick(object sender, RoutedEventArgs e) {
+            string temp = vonFahrplanComboBox.Text;
+            vonFahrplanComboBox.Text = bisFahrplanComboBox.Text;
+            bisFahrplanComboBox.Text = temp;
         }
     }
 }
