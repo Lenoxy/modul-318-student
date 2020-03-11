@@ -14,7 +14,6 @@ namespace Fahrplan_Applikation_GUI {
         Transport transport;
         NavigationEngine navigationEngine;
 
-        Connections fahrplanConnections { get { return fahrplanConnections; } set { fahrplanConnections = value; } }
         public MainWindow() {
             InitializeComponent();
             transport = new Transport();
@@ -125,7 +124,7 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private void onStationensucheSucheClick(object sender, RoutedEventArgs e) {
-            searchStations(stationensucheSuchenComboBox.Text);
+            stationensucheListBox.ItemsSource = searchStations(stationensucheSuchenComboBox.Text);
         }
 
         private void showError(string message) {

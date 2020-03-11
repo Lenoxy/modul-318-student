@@ -23,12 +23,12 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Name="fahrplan" Content="Fahrplan" Click="onNavButtonClick"/>
-            <Button Grid.Row="1" Name="abfahrtstafel" Content="Abfahrtstafel" Click="onNavButtonClick"/>
-            <Button Grid.Row="2" Name="stationensuche" Content="Stationensuche" Click="onNavButtonClick"/>
+            <Button Grid.Row="0" Name="fahrplan" Content="Fahrplan" Click="onNavButtonClick" TabIndex="0"/>
+            <Button Grid.Row="1" Name="abfahrtstafel" Content="Abfahrtstafel" Click="onNavButtonClick" TabIndex="1"/>
+            <Button Grid.Row="2" Name="stationensuche" Content="Stationensuche" Click="onNavButtonClick" TabIndex="2"/>
         </Grid>
 
-        <Label Name="titleLabel" Grid.Column="1" Grid.Row="0"/>
+        <Label Name="titleLabel" Grid.Column="1" Grid.Row="0" FontWeight="Bold" />
 
         <!-- Fahrplan -->
         <Grid Name="fahrplanGrid" Grid.Column="1" Grid.Row="1">
