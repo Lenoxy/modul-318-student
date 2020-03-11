@@ -26,7 +26,7 @@ namespace Fahrplan_Applikation_GUI {
             InitializeComponent();
             transport = new Transport();
             List<Grid> menuEntries = new List<Grid>() { fahrplanGrid, abfahrtstafelGrid, stationensucheGrid, stationenBeiMirGrid };
-            navigationEngine = new NavigationEngine(menuEntries, "fahrplan", titleLabel);
+            navigationEngine = new NavigationEngine(menuEntries, fahrplan, titleLabel);
         }
 
         private void onFahrplanSearchClick(object sender, RoutedEventArgs e) {
@@ -38,6 +38,7 @@ namespace Fahrplan_Applikation_GUI {
                     for (int i = 0; i < 5; i++) {
                         if (i < connections.ConnectionList.Count) {
                             string outStr;
+
                             Connection el = connections.ConnectionList.ElementAt(i);
                             outStr = el.From.Station.Name + " (" + DateTime.Parse(el.From.Departure).ToShortTimeString() + ")";
                             outStr += " -> ";
@@ -48,17 +49,19 @@ namespace Fahrplan_Applikation_GUI {
                     }
                     fahrplanListBox.ItemsSource = connectionsStringList;
                 } else {
-                    showError("Es wurden keine Resultate gefunden.");
+                    showError("Es wurden keine Resultate für die Eingaben gefunden.");
                 }
             } else {
                 showError("Bitte geben Sie eine Abfharts- und Ankunftsstation an.");
             }
         }
-        private List<string> searchStationName(String str) {
+        private List<string> getStationStr(String str) {
             List<Station> stationList = transport.GetStations(str).StationList;
             List<string> stationNameList = new List<string>();
             foreach (Station s in stationList) {
-                stationNameList.Add(s.Name);
+                if (s.Id != null) {
+                    stationNameList.Add(s.Name);
+                }
             }
             return stationNameList;
         }
@@ -66,33 +69,64 @@ namespace Fahrplan_Applikation_GUI {
         private void onNavButtonClick(object sender, RoutedEventArgs e) {
             if (sender is Button) {
                 Button b = (Button)sender;
-                navigationEngine.setActiveGrid(b.Name);
+                navigationEngine.setActiveGrid(b);
             } else {
                 throw new ArgumentOutOfRangeException();
             }
         }
 
         private void onStationensucheSucheClick(object sender, RoutedEventArgs e) {
-            if (stationensucheTextBox.Text.Length != 0) {
-                List<string> stations = searchStationName(stationensucheTextBox.Text);
-                if (stations.Count > 0) {
-                    stationensucheListBox.ItemsSource = stations;
-                } else {
-                    stationensucheListBox.Items.Clear();
-                    showError("Die gewünschte Abfrage hat keine Resultate geliefert.");
-                }
-            } else {
-                showError("Bitte geben Sie eine Suche ein.");
-            }
+            searchStations(stationensucheSuchenComboBox.Text);
         }
 
         private void showError(string message) {
             MessageBox.Show(message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void stationensucheTextBoxKeyUp(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Enter)
-                onStationensucheSucheClick(sender, null);
+        private void onAbfahrtstafelSucheClick(object sender, RoutedEventArgs e) {
+            if (abfahrtstafelSuchenComboBox.Text.Length > 0) {
+                StationBoardRoot stationBoardRoot = transport.GetStationBoard(abfahrtstafelSuchenComboBox.Text, "");
+                if (stationBoardRoot.Entries.Count > 0) {
+                    List<string> abfahrtstafelStringList = new List<string>();
+
+                    foreach (StationBoard s in stationBoardRoot.Entries) {
+                        string outStr;
+                        outStr = (s.Stop.Departure - DateTime.Now).Minutes.ToString() + "' - " + s.Number + " " + s.To;
+
+                        abfahrtstafelStringList.Add(outStr);
+                    }
+                    abfahrtstafelListBox.ItemsSource = abfahrtstafelStringList;
+                } else {
+                    showError("Es wurde keine Station für die gewünschte Abfrage gefunden.");
+                }
+
+
+            } else {
+                showError("Bitte geben Sie eine Station an.");
+            }
+        }
+
+        private List<string> searchStations(string searchStr) {
+            if (searchStr.Length != 0) {
+                List<string> stations = getStationStr(searchStr);
+                if (stations.Count > 0) {
+                    return stations;
+                } else {
+                    showError("Die gewünschte Abfrage hat keine Resultate geliefert.");
+                    return null;
+                }
+            } else {
+                showError("Bitte geben Sie eine Suche ein.");
+                return null;
+            }
+        }
+
+        private void searchStationsAutoComplete(object sender, KeyEventArgs e) {
+            var target = sender as ComboBox;
+            target.IsDropDownOpen = true;
+            List<string> stationList = getStationStr(target.Text);
+            target.ItemsSource = stationList;
+
         }
     }
 }

@@ -45,32 +45,36 @@
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Name="vonFahrplanComboBox" IsEditable="True" Margin="30" Height="25" FontSize="18"/>
-                <ComboBox Grid.Column="1" Name="bisFahrplanComboBox" IsEditable="True" Margin="30" Height="25" FontSize="18"/>
+                <ComboBox 
+                    Grid.Column="0" 
+                    Name="vonFahrplanComboBox" 
+                    IsEditable="True" 
+                    Margin="20" 
+                    Height="25" 
+                    KeyDown="searchStationsAutoComplete" 
+                    IsTextSearchEnabled="False"
+                    />
+                <ComboBox 
+                    Grid.Column="1" 
+                    Name="bisFahrplanComboBox" 
+                    IsEditable="True" 
+                    Margin="20" 
+                    Height="25" 
+                    KeyDown="searchStationsAutoComplete" 
+                    IsTextSearchEnabled="False" 
+                    />
                 <!-- TODO -->
                 <DatePicker Grid.Column="2" Margin="10" Height="25"/>
                 <Button Grid.Column="3" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
             </Grid>
-            <!--<ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Connections}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header=""/>
-                    </GridView>
-                </ListView.View>-->
-            <!--</ListView>-->
-                <ListBox Grid.Row="1" Margin="10" Name="fahrplanListBox"/>
 
+            <ListBox Grid.Row="1" Margin="10" Name="fahrplanListBox"/>
 
-
-            </Grid>
-
-        <Grid Name="abfahrtstafelGrid" Grid.Column="1" Grid.Row="1">
-            <Label Content="abfahrtstafel"/>
         </Grid>
 
-        <Grid Name="stationensucheGrid" Grid.Column="1" Grid.Row="1">
+        <Grid Name="abfahrtstafelGrid" Grid.Column="1" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="120"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
@@ -78,8 +82,41 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Height="20" Margin="20" Name="stationensucheTextBox"/>
-                <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="20" Margin="20"/>
+                <ComboBox 
+                    Grid.Column="0" 
+                    Name="abfahrtstafelSuchenComboBox" 
+                    IsEditable="True" 
+                    Margin="20" 
+                    Height="25" 
+                    KeyDown="searchStationsAutoComplete" 
+                    IsTextSearchEnabled="False" 
+                    />                
+                <Button Grid.Column="1" Content="Suchen" Click="onAbfahrtstafelSucheClick" IsDefault="True" Height="25" Margin="20"/>
+            </Grid>
+            <ListBox Grid.Row="1" Name="abfahrtstafelListBox" Margin="10"/>
+
+        </Grid>
+
+        <Grid Name="stationensucheGrid" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox 
+                    Grid.Column="0" 
+                    Name="stationensucheSuchenComboBox" 
+                    IsEditable="True" 
+                    Margin="20" 
+                    Height="25" 
+                    KeyDown="searchStationsAutoComplete" 
+                    IsTextSearchEnabled="False" 
+                />
+                <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="25" Margin="20"/>
             </Grid>
             <ListBox Grid.Row="1" Name="stationensucheListBox" Margin="10"/>
         </Grid>

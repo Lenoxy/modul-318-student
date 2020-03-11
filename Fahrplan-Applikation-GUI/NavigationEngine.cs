@@ -10,20 +10,20 @@ namespace Fahrplan_Applikation_GUI {
         private List<Grid> menuEntries = new List<Grid>();
         public Grid activeGrid;
         private Label currentPageLabel;
-        public NavigationEngine(List<Grid> menuEntries, string startGrid, Label currentPageLabel) {
+        public NavigationEngine(List<Grid> menuEntries, Button startButton, Label currentPageLabel) {
             this.menuEntries = menuEntries;
             this.currentPageLabel = currentPageLabel;
-            setActiveGrid(startGrid);
+            setActiveGrid(startButton);
         }
 
-        public void setActiveGrid(string buttonName) {
-            Grid gridToSelect = getGridFromString(buttonName);
+        public void setActiveGrid(Button b) {
+            Grid gridToSelect = getGridFromString(b.Name);
             foreach(Grid g in menuEntries) {
                 g.Visibility = System.Windows.Visibility.Hidden;
             }
             gridToSelect.Visibility = System.Windows.Visibility.Visible;
             activeGrid = gridToSelect;
-            currentPageLabel.Content = gridToSelect.Name;
+            currentPageLabel.Content = b.Content;
         }
 
         private Grid getGridFromString(string name) {
