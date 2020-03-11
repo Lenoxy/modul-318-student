@@ -5,8 +5,88 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fahrplan_Applikation_GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Fahrplan Applikation" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menubar -->
+        <Grid Grid.Column="0" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Name="fahrplan" Content="Fahrplan" Click="onNavButtonClick"/>
+            <Button Grid.Row="1" Name="abfahrtstafel" Content="Abfahrtstafel" Click="onNavButtonClick"/>
+            <Button Grid.Row="2" Name="stationensuche" Content="Stationensuche" Click="onNavButtonClick"/>
+            <Button Grid.Row="3" Name="stationenBeiMir" Content="Stationen bei mir" Click="onNavButtonClick"/>
+        </Grid>
+
+        <Label Name="titleLabel" Grid.Column="1" Grid.Row="0"/>
+
+        <!-- Fahrplan -->
+        <Grid Name="fahrplanGrid" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" Name="vonFahrplanComboBox" IsEditable="True" Margin="30" Height="25" FontSize="18"/>
+                <ComboBox Grid.Column="1" Name="bisFahrplanComboBox" IsEditable="True" Margin="30" Height="25" FontSize="18"/>
+                <!-- TODO -->
+                <DatePicker Grid.Column="2" Margin="10" Height="25"/>
+                <Button Grid.Column="3" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
+            </Grid>
+            <!--<ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Connections}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header=""/>
+                    </GridView>
+                </ListView.View>-->
+            <!--</ListView>-->
+                <ListBox Grid.Row="1" Margin="10" Name="fahrplanListBox"/>
+
+
+
+            </Grid>
+
+        <Grid Name="abfahrtstafelGrid" Grid.Column="1" Grid.Row="1">
+            <Label Content="abfahrtstafel"/>
+        </Grid>
+
+        <Grid Name="stationensucheGrid" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Height="20" Margin="20" Name="stationensucheTextBox"/>
+                <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="20" Margin="20"/>
+            </Grid>
+            <ListBox Grid.Row="1" Name="stationensucheListBox" Margin="10"/>
+        </Grid>
+
+        <Grid Name="stationenBeiMirGrid" Grid.Column="1" Grid.Row="1">
+            <Label Content="stationen bei mir"/>
+
+        </Grid>
     </Grid>
 </Window>
