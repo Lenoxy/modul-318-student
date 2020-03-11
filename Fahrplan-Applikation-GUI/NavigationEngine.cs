@@ -10,6 +10,7 @@ namespace Fahrplan_Applikation_GUI {
         private List<Grid> menuEntries = new List<Grid>();
         public Grid activeGrid;
         private Label currentPageLabel;
+
         public NavigationEngine(List<Grid> menuEntries, Button startButton, Label currentPageLabel) {
             this.menuEntries = menuEntries;
             this.currentPageLabel = currentPageLabel;

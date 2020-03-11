@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,22 +31,53 @@ namespace Fahrplan_Applikation_GUI {
             List<Grid> menuEntries = new List<Grid>() { fahrplanGrid, abfahrtstafelGrid, stationensucheGrid, stationenBeiMirGrid };
             navigationEngine = new NavigationEngine(menuEntries, fahrplan, titleLabel);
 
-            for (int i = 0; i < 24;i++) {
+            for (int i = 0; i < 24; i++) {
                 fahrplanTimePicker.Items.Add(i.ToString() + ":00");
             }
         }
 
         private void onFahrplanSearchClick(object sender, RoutedEventArgs e) {
             if (vonFahrplanComboBox.Text.Length > 0 && bisFahrplanComboBox.Text.Length > 0) {
-                if (!Regex.IsMatch(fahrplanTimePicker.Text, "^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])$")) {
-                    showError("Ungültiges Format der Zeit. Anfrage wird ohne Zeit abgegeben.");
-                    fahrplanTimePicker.Text = null;
+
+                if(fahrplanDatePicker.Text == "") {
+                    fahrplanDatePicker.SelectedDate = DateTime.Now;
+                }
+                if(fahrplanTimePicker.Text == "") {
+                    fahrplanTimePicker.Text = DateTime.Now.ToString("HH:mm");
                 }
 
-                Connections connections = transport.GetConnections(vonFahrplanComboBox.Text, bisFahrplanComboBox.Text, fahrplanDatePicker.DisplayDate.ToString(), fahrplanTimePicker.Text);
+                Console.WriteLine(fahrplanDatePicker.SelectedDate.GetValueOrDefault().ToString("dd/MM/yyyy"));
+                fahrplanDatePicker.Text = validateDate(fahrplanDatePicker.SelectedDate.GetValueOrDefault().ToString("dd/MM/yyyy"));
+                fahrplanTimePicker.Text = validateTime(fahrplanTimePicker.Text);
+
+
+                Connections connections = transport.GetConnections(
+                    vonFahrplanComboBox.Text,
+                    bisFahrplanComboBox.Text,
+                    fahrplanDatePicker.Text,
+                    fahrplanTimePicker.Text
+                    );
                 fahrplanListBox.ItemsSource = parseFahrplanRows(connections);
             } else {
                 showError("Bitte geben Sie eine Abfharts- und Ankunftsstation an.");
+            }
+        }
+
+        private string validateTime(string time) {
+            if (!Regex.IsMatch(time, "^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])$") && time != "") {
+                showError("Ungültiges Format der Zeit.");
+                time = DateTime.Now.ToString("HH:mm");
+            }
+            return time;
+        }
+
+        private string validateDate(string date) {
+            Console.WriteLine(date);
+            if (Regex.IsMatch(date, "^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
+                return DateTime.Parse(date).ToString("MM/dd/yyyy");
+            } else {
+                showError("Ungültiges Format des Datums.");
+                return DateTime.Now.ToString("MM/dd/yyyy");
             }
         }
 
@@ -57,7 +89,7 @@ namespace Fahrplan_Applikation_GUI {
                         string outStr;
 
                         Connection el = connections.ConnectionList.ElementAt(i);
-                        outStr = el.From.Station.Name + " (" + DateTime.Parse(el.From.Departure).ToShortTimeString() + ")";
+                        outStr = el.From.Station.Name + " (" + DateTime.Parse(el.From.Departure).ToString("dd.MM HH:mm") + ")";
                         outStr += " -> ";
                         outStr += el.To.Station.Name + " (" + DateTime.Parse(el.To.Arrival).ToShortTimeString() + ")";
                         outStr += " - (" + el.Duration + ")";

@@ -71,7 +71,7 @@
                     </Grid.RowDefinitions>
 
                     <DatePicker Grid.Row="0" Name="fahrplanDatePicker" Margin="10" Height="25"/>
-                    <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True" Text="Bitte wählen"/>
+                    <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True"/>
                 </Grid>
                 
                 <Button Grid.Column="3" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
