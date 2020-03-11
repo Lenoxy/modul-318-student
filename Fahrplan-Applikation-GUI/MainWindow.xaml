@@ -42,8 +42,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
                 <ComboBox 
                     Grid.Column="0" 
@@ -63,8 +63,17 @@
                     KeyDown="searchStationsAutoComplete" 
                     IsTextSearchEnabled="False" 
                     />
-                <!-- TODO -->
-                <DatePicker Grid.Column="2" Margin="10" Height="25"/>
+                
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DatePicker Grid.Row="0" Name="fahrplanDatePicker" Margin="10" Height="25"/>
+                    <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True" Text="Bitte wählen"/>
+                </Grid>
+                
                 <Button Grid.Column="3" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
             </Grid>
 
@@ -90,7 +99,7 @@
                     Height="25" 
                     KeyDown="searchStationsAutoComplete" 
                     IsTextSearchEnabled="False" 
-                    />                
+                    />
                 <Button Grid.Column="1" Content="Suchen" Click="onAbfahrtstafelSucheClick" IsDefault="True" Height="25" Margin="20"/>
             </Grid>
             <ListBox Grid.Row="1" Name="abfahrtstafelListBox" Margin="10"/>

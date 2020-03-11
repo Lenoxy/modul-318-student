@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,36 +26,51 @@ namespace Fahrplan_Applikation_GUI {
         public MainWindow() {
             InitializeComponent();
             transport = new Transport();
+
             List<Grid> menuEntries = new List<Grid>() { fahrplanGrid, abfahrtstafelGrid, stationensucheGrid, stationenBeiMirGrid };
             navigationEngine = new NavigationEngine(menuEntries, fahrplan, titleLabel);
+
+            for (int i = 0; i < 24;i++) {
+                fahrplanTimePicker.Items.Add(i.ToString() + ":00");
+            }
         }
 
         private void onFahrplanSearchClick(object sender, RoutedEventArgs e) {
             if (vonFahrplanComboBox.Text.Length > 0 && bisFahrplanComboBox.Text.Length > 0) {
-                Connections connections = transport.GetConnections(vonFahrplanComboBox.Text, bisFahrplanComboBox.Text);
-                if (connections.ConnectionList.Count > 0) {
-
-                    List<string> connectionsStringList = new List<string>();
-                    for (int i = 0; i < 5; i++) {
-                        if (i < connections.ConnectionList.Count) {
-                            string outStr;
-
-                            Connection el = connections.ConnectionList.ElementAt(i);
-                            outStr = el.From.Station.Name + " (" + DateTime.Parse(el.From.Departure).ToShortTimeString() + ")";
-                            outStr += " -> ";
-                            outStr += el.To.Station.Name + " (" + DateTime.Parse(el.To.Arrival).ToShortTimeString() + ")";
-                            outStr += " - (" + el.Duration + ")";
-                            connectionsStringList.Add(outStr);
-                        }
-                    }
-                    fahrplanListBox.ItemsSource = connectionsStringList;
-                } else {
-                    showError("Es wurden keine Resultate für die Eingaben gefunden.");
+                if (!Regex.IsMatch(fahrplanTimePicker.Text, "^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])$")) {
+                    showError("Ungültiges Format der Zeit. Anfrage wird ohne Zeit abgegeben.");
+                    fahrplanTimePicker.Text = null;
                 }
+
+                Connections connections = transport.GetConnections(vonFahrplanComboBox.Text, bisFahrplanComboBox.Text, fahrplanDatePicker.DisplayDate.ToString(), fahrplanTimePicker.Text);
+                fahrplanListBox.ItemsSource = parseFahrplanRows(connections);
             } else {
                 showError("Bitte geben Sie eine Abfharts- und Ankunftsstation an.");
             }
         }
+
+        private List<string> parseFahrplanRows(Connections connections) {
+            List<string> connectionsStringList = new List<string>();
+            if (connections.ConnectionList.Count > 0) {
+                for (int i = 0; i < 5; i++) {
+                    if (i < connections.ConnectionList.Count) {
+                        string outStr;
+
+                        Connection el = connections.ConnectionList.ElementAt(i);
+                        outStr = el.From.Station.Name + " (" + DateTime.Parse(el.From.Departure).ToShortTimeString() + ")";
+                        outStr += " -> ";
+                        outStr += el.To.Station.Name + " (" + DateTime.Parse(el.To.Arrival).ToShortTimeString() + ")";
+                        outStr += " - (" + el.Duration + ")";
+                        connectionsStringList.Add(outStr);
+                    }
+                }
+            } else {
+                showError("Es wurden keine Resultate für die Eingaben gefunden.");
+            }
+            return connectionsStringList;
+
+        }
+
         private List<string> getStationStr(String str) {
             List<Station> stationList = transport.GetStations(str).StationList;
             List<string> stationNameList = new List<string>();
