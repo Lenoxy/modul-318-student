@@ -158,6 +158,7 @@ namespace Fahrplan_Applikation_GUI {
                             abfahrtstafelStringList.Add(outStr);
                         }
                         abfahrtstafelListBox.ItemsSource = abfahrtstafelStringList;
+                        abfahrtstafelSuchenComboBox.Text = stationBoardRoot.Station.Name;
                     } else {
                         showError("Es wurde keine Station für die gewünschte Abfrage gefunden.");
                     }
