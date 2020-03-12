@@ -75,8 +75,17 @@
                     <DatePicker Grid.Row="0" Name="fahrplanDatePicker" Margin="10" Height="25"/>
                     <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True"/>
                 </Grid>
-                
-                <Button Grid.Column="4" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
+
+                <Grid Grid.Column="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Height="25" Width="30" Click="onEmailFahrplanClick" >
+                        <Image Source="res/mail.png"/>
+                    </Button>
+                    <Button Grid.Row="1" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
+                </Grid>
             </Grid>
 
             <ListBox Grid.Row="1" Margin="10" Name="fahrplanListBox"/>

@@ -27,12 +27,13 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private void onFahrplanSearchClick(object sender, RoutedEventArgs e) {
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             if (vonFahrplanComboBox.Text.Length > 0 && bisFahrplanComboBox.Text.Length > 0) {
 
-                if(fahrplanDatePicker.Text == "") {
+                if (fahrplanDatePicker.Text == "") {
                     fahrplanDatePicker.SelectedDate = DateTime.Now;
                 }
-                if(fahrplanTimePicker.Text == "") {
+                if (fahrplanTimePicker.Text == "") {
                     fahrplanTimePicker.Text = DateTime.Now.ToString("HH:mm");
                 }
 
@@ -45,17 +46,21 @@ namespace Fahrplan_Applikation_GUI {
                 fahrplanDatePicker.Text = selectedDate.ToString("dd/MM/yyyy");
                 fahrplanTimePicker.Text = validateTime(fahrplanTimePicker.Text);
 
-
-                Connections connections = transport.GetConnections(
-                    vonFahrplanComboBox.Text,
-                    bisFahrplanComboBox.Text,
-                    selectedDate.ToString("MM/dd/yyyy"),
-                    fahrplanTimePicker.Text
-                    );
-                fahrplanListBox.ItemsSource = parseFahrplanRows(connections);
+                try {
+                    Connections connections = transport.GetConnections(
+                        vonFahrplanComboBox.Text,
+                        bisFahrplanComboBox.Text,
+                        selectedDate.ToString("MM/dd/yyyy"),
+                        fahrplanTimePicker.Text
+                        );
+                    fahrplanListBox.ItemsSource = parseFahrplanRows(connections);
+                } catch (System.Net.WebException) {
+                    showError("Es konnte keine Verbindung hergestellt werden.");
+                }
             } else {
                 showError("Bitte geben Sie eine Abfharts- und Ankunftsstation an.");
             }
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
 
         private string validateTime(string time) {
@@ -67,7 +72,7 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private DateTime validateDate(DateTime? date) {
-            if(date.HasValue) {
+            if (date.HasValue) {
                 DateTime d = (DateTime)date;
                 if (Regex.IsMatch(d.ToString("dd/MM/yyyy"), "^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
                     return d;
@@ -124,7 +129,13 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private void onStationensucheSucheClick(object sender, RoutedEventArgs e) {
-            stationensucheListBox.ItemsSource = searchStations(stationensucheSuchenComboBox.Text);
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+            try {
+                stationensucheListBox.ItemsSource = searchStations(stationensucheSuchenComboBox.Text);
+            } catch (System.Net.WebException) {
+                showError("Es konnte keine Verbindung hergestellt werden.");
+            }
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
 
         private void showError(string message) {
@@ -132,25 +143,33 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private void onAbfahrtstafelSucheClick(object sender, RoutedEventArgs e) {
-            if (abfahrtstafelSuchenComboBox.Text.Length > 0) {
-                StationBoardRoot stationBoardRoot = transport.GetStationBoard(abfahrtstafelSuchenComboBox.Text, "");
-                if (stationBoardRoot.Entries.Count > 0) {
-                    List<string> abfahrtstafelStringList = new List<string>();
+            try {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                if (abfahrtstafelSuchenComboBox.Text.Length > 0) {
+                    StationBoardRoot stationBoardRoot = transport.GetStationBoard(abfahrtstafelSuchenComboBox.Text, "");
+                    if (stationBoardRoot.Entries.Count > 0) {
+                        List<string> abfahrtstafelStringList = new List<string>();
 
-                    foreach (StationBoard s in stationBoardRoot.Entries) {
-                        string outStr;
-                        outStr = (s.Stop.Departure - DateTime.Now).Minutes.ToString() + "' - " + s.Number + " " + s.To;
+                        foreach (StationBoard s in stationBoardRoot.Entries) {
+                            string outStr;
+                            outStr = Math.Round((s.Stop.Departure - DateTime.Now).TotalMinutes).ToString();
+                            outStr += "' - " + s.Number + " " + s.To;
 
-                        abfahrtstafelStringList.Add(outStr);
+                            abfahrtstafelStringList.Add(outStr);
+                        }
+                        abfahrtstafelListBox.ItemsSource = abfahrtstafelStringList;
+                    } else {
+                        showError("Es wurde keine Station für die gewünschte Abfrage gefunden.");
                     }
-                    abfahrtstafelListBox.ItemsSource = abfahrtstafelStringList;
+
+
                 } else {
-                    showError("Es wurde keine Station für die gewünschte Abfrage gefunden.");
+                    showError("Bitte geben Sie eine Station an.");
                 }
-
-
-            } else {
-                showError("Bitte geben Sie eine Station an.");
+            } catch (System.Net.WebException) {
+                showError("Es konnte keine Verbindung hergestellt werden.");
+            } finally {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
             }
         }
 
@@ -170,10 +189,14 @@ namespace Fahrplan_Applikation_GUI {
         }
 
         private void searchStationsAutoComplete(object sender, KeyEventArgs e) {
-            var target = sender as ComboBox;
-            target.IsDropDownOpen = true;
-            List<string> stationList = getStationStr(target.Text);
-            target.ItemsSource = stationList;
+            try {
+                var target = sender as ComboBox;
+                target.IsDropDownOpen = true;
+                List<string> stationList = getStationStr(target.Text);
+                target.ItemsSource = stationList;
+            } catch (System.Net.WebException) {
+                //Nichts, da das Textfeld auch abgefüllt werden kann falls keine Autocompletion exisitert.
+            }
 
         }
 
@@ -181,6 +204,18 @@ namespace Fahrplan_Applikation_GUI {
             string temp = vonFahrplanComboBox.Text;
             vonFahrplanComboBox.Text = bisFahrplanComboBox.Text;
             bisFahrplanComboBox.Text = temp;
+        }
+
+        private void onEmailFahrplanClick(object sender, RoutedEventArgs e) {
+            if (!fahrplanListBox.Items.IsEmpty) {
+                string outStr = "";
+                foreach (string s in fahrplanListBox.Items) {
+                    outStr += s;
+                }
+                System.Diagnostics.Process.Start("mailto:?subject=Fahrplan&body=" + outStr);
+            } else {
+                showError("Es müssen Verbindungen angezeigt werden um diese verschiken zu können.");
+            }
         }
     }
 }
