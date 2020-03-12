@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fahrplan_Applikation_GUI"
         mc:Ignorable="d"
-        Title="Fahrplan Applikation" Height="450" Width="800">
+        Title="Fahrplan Applikation" Height="450" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -38,53 +38,67 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Margin="5" Height="25"  Content="Von"/>
                 <ComboBox 
-                    Grid.Column="0" 
+                    Grid.Column="1" 
                     Name="vonFahrplanComboBox" 
                     IsEditable="True" 
-                    Margin="20" 
+                    Margin="5" 
                     Height="25" 
                     KeyDown="searchStationsAutoComplete" 
                     IsTextSearchEnabled="False"
+                    TabIndex="10"
                     />
-                <Button Grid.Column="1" Height="20" Margin="10" Click="onFahrplanSwitchClick">
+                <Button Grid.Column="2" Height="25" Margin="5" Click="onFahrplanSwitchClick" TabIndex="15">
                     <Image Source="res/switch.png"/>
                 </Button>
+                <Label Grid.Column="3" Margin="5" Height="25"  Content="Bis"/>
                 <ComboBox 
-                    Grid.Column="2" 
+                    Grid.Column="4" 
                     Name="bisFahrplanComboBox" 
                     IsEditable="True" 
-                    Margin="20" 
+                    Margin="5" 
                     Height="25" 
                     KeyDown="searchStationsAutoComplete" 
-                    IsTextSearchEnabled="False" 
+                    IsTextSearchEnabled="False"
+                    TabIndex="11"
                     />
-                
-                <Grid Grid.Column="3">
+
+                <Grid Grid.Column="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <DatePicker Grid.Row="0" Name="fahrplanDatePicker" Margin="10" Height="25"/>
-                    <ComboBox Grid.Row="1" Name="fahrplanTimePicker" Margin="10" Height="25" IsEditable="True"/>
+                    <Label Grid.Column="0" Grid.Row="0" Margin="3" Height="25"  Content="Datum"/>
+                    <Label Grid.Column="0" Grid.Row="1" Margin="3" Height="25"  Content="Zeit"/>
+
+
+                    <DatePicker Grid.Row="0" Grid.Column="1" Name="fahrplanDatePicker" Margin="5" Height="25" TabIndex="12"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" Name="fahrplanTimePicker" Margin="5" Height="25" IsEditable="True" TabIndex="13"/>
                 </Grid>
 
-                <Grid Grid.Column="4">
+                <Grid Grid.Column="6">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Height="25" Width="30" Click="onEmailFahrplanClick" >
+                    <Button Grid.Row="0" Height="25" Width="30" Click="onEmailFahrplanClick" TabIndex="16">
                         <Image Source="res/mail.png"/>
                     </Button>
-                    <Button Grid.Row="1" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True"/>
+                    <Button Grid.Row="1" Margin="10" Height="25" Content="Suchen" Click="onFahrplanSearchClick" IsDefault="True" TabIndex="14"/>
                 </Grid>
             </Grid>
 
@@ -92,6 +106,7 @@
 
         </Grid>
 
+        <!-- Abfahrtstafel -->
         <Grid Name="abfahrtstafelGrid" Grid.Column="1" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
@@ -99,24 +114,28 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Margin="10" Height="25"  Content="Station"/>
                 <ComboBox 
-                    Grid.Column="0" 
+                    Grid.Column="1" 
                     Name="abfahrtstafelSuchenComboBox" 
                     IsEditable="True" 
                     Margin="20" 
                     Height="25" 
                     KeyDown="searchStationsAutoComplete" 
-                    IsTextSearchEnabled="False" 
+                    IsTextSearchEnabled="False"
+                    TabIndex="20"
                     />
-                <Button Grid.Column="1" Content="Suchen" Click="onAbfahrtstafelSucheClick" IsDefault="True" Height="25" Margin="20"/>
+                <Button Grid.Column="2" Content="Suchen" Click="onAbfahrtstafelSucheClick" IsDefault="True" Height="25" Margin="20" TabIndex="21"/>
             </Grid>
             <ListBox Grid.Row="1" Name="abfahrtstafelListBox" Margin="10"/>
 
         </Grid>
 
+        <!-- Stationensuche -->
         <Grid Name="stationensucheGrid" Grid.Column="1" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
@@ -127,16 +146,25 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox 
-                    Grid.Column="0" 
-                    Name="stationensucheSuchenComboBox" 
-                    IsEditable="True" 
-                    Margin="20" 
-                    Height="25" 
-                    KeyDown="searchStationsAutoComplete" 
-                    IsTextSearchEnabled="False" 
-                />
-                <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="25" Margin="20"/>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Margin="10" Height="25" Content="Station"/>
+                    <ComboBox
+                        Grid.Column="1"
+                        Name="stationensucheSuchenComboBox" 
+                        IsEditable="True" 
+                        Margin="20" 
+                        Height="25" 
+                        KeyDown="searchStationsAutoComplete" 
+                        IsTextSearchEnabled="False"
+                        TabIndex="30"
+                    />
+                </Grid>
+
+                <Button Grid.Column="1" Content="Suchen" Click="onStationensucheSucheClick" IsDefault="True" Height="25" Margin="20" TabIndex="31"/>
             </Grid>
             <ListBox Grid.Row="1" Name="stationensucheListBox" Margin="10"/>
         </Grid>

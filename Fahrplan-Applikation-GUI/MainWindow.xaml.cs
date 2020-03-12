@@ -190,10 +190,10 @@ namespace Fahrplan_Applikation_GUI {
 
         private void searchStationsAutoComplete(object sender, KeyEventArgs e) {
             try {
-                var target = sender as ComboBox;
-                target.IsDropDownOpen = true;
-                List<string> stationList = getStationStr(target.Text);
-                target.ItemsSource = stationList;
+                var comboBox = sender as ComboBox;
+                comboBox.IsDropDownOpen = true;
+                List<string> stationList = getStationStr(comboBox.Text);
+                comboBox.ItemsSource = stationList;
             } catch (System.Net.WebException) {
                 //Nichts, da das Textfeld auch abgefüllt werden kann falls keine Autocompletion exisitert.
             }
